@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso
 /**
  * Created by fantasy_apple on 2017/5/29.
  */
-class StarGridAdapter(val context: Context, var starInfos: ArrayList<StarInfo>?, var onStarClickListener: OnStarClickListener?) : RecyclerView.Adapter<StarGridAdapter.ItemViewHolder>() {
+class StarGridAdapter(val context: Context, var starInfos: ArrayList<StarInfo>, var onStarClickListener: OnStarClickListener?) : RecyclerView.Adapter<StarGridAdapter.ItemViewHolder>() {
 
     val TAG = javaClass.simpleName
 
@@ -33,14 +33,14 @@ class StarGridAdapter(val context: Context, var starInfos: ArrayList<StarInfo>?,
 
     override fun onBindViewHolder(holder: StarGridAdapter.ItemViewHolder, position: Int) {
         Log.d(TAG, "holder.avatorImg:" + holder.avatorImg)
-        Picasso.with(context).load(starInfos?.get(position)?.avatorUrl).into(holder.avatorImg)
-        holder.previousRankTxt?.text = ("(" + starInfos?.get(position)?.nowRanK + ")")
-        holder.nameTxt?.text = starInfos?.get(position)?.chineaseName
-        holder.avatorImg?.setOnClickListener { v -> onStarClickListener?.onClick(v, position) } //onStarClickListener?.onClick(v, position)
+        Picasso.with(context).load(starInfos.get(position).avatorUrl).into(holder.avatorImg)
+        holder.previousRankTxt.text = ("(" + starInfos.get(position).nowRanK + ")")
+        holder.nameTxt.text = starInfos.get(position).chineaseName
+        holder.avatorImg.setOnClickListener { v -> onStarClickListener?.onClick(v, position) } //onStarClickListener?.onClick(v, position)
     }
 
     override fun getItemCount(): Int {
-        return starInfos?.size ?: 0
+        return starInfos.size
     }
 
 //    fun setOnItemClickListener(listener: OnItemClickListener?) {
@@ -49,10 +49,10 @@ class StarGridAdapter(val context: Context, var starInfos: ArrayList<StarInfo>?,
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var avatorImg: ImageView? = null
-        var nowRankTxt: TextView? = null
-        var previousRankTxt: TextView? = null
-        var nameTxt: TextView? = null
+        lateinit var avatorImg: ImageView
+        lateinit var nowRankTxt: TextView
+        lateinit var previousRankTxt: TextView
+        lateinit var nameTxt: TextView
 
         init {
             with(itemView) {
