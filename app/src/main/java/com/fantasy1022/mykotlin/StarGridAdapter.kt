@@ -24,8 +24,8 @@ class StarGridAdapter(val context: Context, var starInfos: ArrayList<StarInfo>?,
         fun onClick(view: View, position: Int)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): StarGridAdapter.ItemViewHolder {
-        val view = LayoutInflater.from(parent?.getContext()).inflate(R.layout.item_star_grid, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StarGridAdapter.ItemViewHolder {
+        val view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_star_grid, parent, false)
         val itemViewHolder = ItemViewHolder(view)
         return itemViewHolder
     }
@@ -55,11 +55,14 @@ class StarGridAdapter(val context: Context, var starInfos: ArrayList<StarInfo>?,
         var nameTxt: TextView? = null
 
         init {
-            avatorImg = itemView.findViewById(R.id.avatorImg) as ImageView
-            nowRankTxt = itemView.findViewById(R.id.nowRankTxt) as TextView
-            previousRankTxt = itemView.findViewById(R.id.previousRankTxt) as TextView
-            nameTxt = itemView.findViewById(R.id.nameTxt) as TextView
+            with(itemView) {
+                avatorImg = findViewById(R.id.avatorImg) as ImageView
+                nowRankTxt = findViewById(R.id.nowRankTxt) as TextView
+                previousRankTxt = findViewById(R.id.previousRankTxt) as TextView
+                nameTxt = findViewById(R.id.nameTxt) as TextView
+            }
         }
+
 
     }
 
