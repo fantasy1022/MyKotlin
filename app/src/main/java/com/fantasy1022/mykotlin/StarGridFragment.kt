@@ -13,6 +13,8 @@ import android.view.ViewGroup
 import com.fantasy1022.mykotlin.data.StarInfo
 import com.squareup.picasso.Picasso
 import android.graphics.drawable.BitmapDrawable
+import android.transition.Explode
+import android.transition.Slide
 import android.widget.ImageView
 
 
@@ -61,14 +63,11 @@ class StarGridFragment : Fragment(), StarGridAdapter.OnStarClickListener {
         var imageTransitionName = ""
         var starDetailFragment = StarDetailFragment()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            sharedElementReturnTransition = TransitionInflater.from(
-                    getActivity()).inflateTransition(R.transition.change_image_trans);
-            exitTransition = Fade()
+            reenterTransition = Explode()
 
             starDetailFragment.sharedElementEnterTransition = TransitionInflater.from(
                     getActivity()).inflateTransition(R.transition.change_image_trans);
-            starDetailFragment.enterTransition = Fade()
-            starDetailFragment.startPostponedEnterTransition()
+//            starDetailFragment.startPostponedEnterTransition()
 //            starDetailFragment.postponeEnterTransition()
             imageTransitionName = view.transitionName
         }
