@@ -1,6 +1,7 @@
 package com.fantasy1022.mykotlin
 
 import android.content.Context
+import android.os.Build
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,7 +22,7 @@ class StarGridAdapter(val context: Context, var starInfos: ArrayList<StarInfo>, 
 
 
     interface OnStarClickListener {
-        fun onClick(view: View, position: Int)
+        fun onClick(view: ImageView, position: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StarGridAdapter.ItemViewHolder {
@@ -36,7 +37,11 @@ class StarGridAdapter(val context: Context, var starInfos: ArrayList<StarInfo>, 
         Picasso.with(context).load(starInfos.get(position).avatorUrl).into(holder.avatorImg)
         holder.previousRankTxt.text = ("(" + starInfos.get(position).nowRanK + ")")
         holder.nameTxt.text = starInfos.get(position).chineaseName
-        holder.avatorImg.setOnClickListener { v -> onStarClickListener?.onClick(v, position) } //onStarClickListener?.onClick(v, position)
+        holder.avatorImg.setOnClickListener { v -> onStarClickListener?.onClick(v as ImageView, position) } //onStarClickListener?.onClick(v, position)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            holder.avatorImg.transitionName = "trans_image" + position
+        }
+
     }
 
     override fun getItemCount(): Int {

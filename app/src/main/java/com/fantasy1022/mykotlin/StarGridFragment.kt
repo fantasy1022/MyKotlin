@@ -5,12 +5,15 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.RecyclerView
 import android.transition.Fade
+import android.transition.TransitionInflater
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.fantasy1022.mykotlin.data.StarInfo
 import com.squareup.picasso.Picasso
+import android.graphics.drawable.BitmapDrawable
+import android.widget.ImageView
 
 
 /**
@@ -35,8 +38,7 @@ class StarGridFragment : Fragment(), StarGridAdapter.OnStarClickListener {
         super.onCreate(savedInstanceState)
         picasso = Picasso.Builder(activity)
                 .build()
-        val d = StarInfo()
-        val d2 = d.copy()
+
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -44,6 +46,7 @@ class StarGridFragment : Fragment(), StarGridAdapter.OnStarClickListener {
 
         starRecycleView = view?.findViewById(R.id.starRecycleView) as RecyclerView
         setUpRecyclerView()
+        postponeEnterTransition()
         return view
     }
 
@@ -53,22 +56,33 @@ class StarGridFragment : Fragment(), StarGridAdapter.OnStarClickListener {
         starRecycleView.adapter = adapterStar
     }
 
-    override fun onClick(view: View, position: Int) {
+    override fun onClick(view: ImageView, position: Int) {
         Log.d(TAG, "position:" + position)
-        //TODO: add click transittion
-
-        var fragment = StarGridFragment()
+        var imageTransitionName = ""
+        var starDetailFragment = StarDetailFragment()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            fragment.enterTransition = Fade()
-            fragment.sharedElementEnterTransition = Fade()
+            sharedElementReturnTransition = TransitionInflater.from(
+                    getActivity()).inflateTransition(R.transition.change_image_trans);
+            exitTransition = Fade()
+
+            starDetailFragment.sharedElementEnterTransition = TransitionInflater.from(
+                    getActivity()).inflateTransition(R.transition.change_image_trans);
+            starDetailFragment.enterTransition = Fade()
+            starDetailFragment.startPostponedEnterTransition()
+//            starDetailFragment.postponeEnterTransition()
+            imageTransitionName = view.transitionName
         }
 
-
+        val bundle = Bundle()
+        bundle.putString("TRANS_NAME", imageTransitionName)
+        bundle.putParcelable("IMAGE", (view.drawable as BitmapDrawable).bitmap) //TODO:Check drawable
+        starDetailFragment.arguments = bundle //TODO:Use factory pattern
 
         activity.supportFragmentManager
                 .beginTransaction()
-//                .addSharedElement(fragment, "ds")
-                .replace(R.id.contentFrameLay, fragment)
+                .addToBackStack(null)
+                .addSharedElement(view, imageTransitionName)
+                .replace(R.id.contentFrameLay, starDetailFragment)
                 .commit()
     }
 }
