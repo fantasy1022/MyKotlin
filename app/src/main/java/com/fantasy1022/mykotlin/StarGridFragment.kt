@@ -16,6 +16,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.transition.Explode
 import android.transition.Slide
 import android.widget.ImageView
+import android.widget.TextView
 
 
 /**
@@ -58,29 +59,37 @@ class StarGridFragment : Fragment(), StarGridAdapter.OnStarClickListener {
         starRecycleView.adapter = adapterStar
     }
 
-    override fun onClick(view: ImageView, position: Int) {
+    override fun onClick(view: View, position: Int) {
         Log.d(TAG, "position:" + position)
         var imageTransitionName = ""
+        var txtTransitionName = ""
         var starDetailFragment = StarDetailFragment()
+        val imageView = view.findViewById(R.id.avatorImg) as ImageView
+        val txtView = view.findViewById(R.id.nameTxt) as TextView
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            reenterTransition = Explode()
+            // reenterTransition = Explode()
 
             starDetailFragment.sharedElementEnterTransition = TransitionInflater.from(
-                    getActivity()).inflateTransition(R.transition.change_image_trans);
-//            starDetailFragment.startPostponedEnterTransition()
-//            starDetailFragment.postponeEnterTransition()
-            imageTransitionName = view.transitionName
+                    getActivity()).inflateTransition(R.transition.change_image_trans)
+            imageTransitionName = imageView.transitionName
+            txtTransitionName = txtView.transitionName
         }
 
         val bundle = Bundle()
         bundle.putString("TRANS_NAME", imageTransitionName)
-        bundle.putParcelable("IMAGE", (view.drawable as BitmapDrawable).bitmap) //TODO:Check drawable
+        bundle.putString("TRANS_TXT", txtTransitionName)
+        bundle.putParcelable("IMAGE", (imageView.drawable as BitmapDrawable).bitmap)
+        bundle.putString("NAME", "馬龍")
+
         starDetailFragment.arguments = bundle //TODO:Use factory pattern
 
         activity.supportFragmentManager
                 .beginTransaction()
                 .addToBackStack(null)
-                .addSharedElement(view, imageTransitionName)
+                .addSharedElement(imageView, imageTransitionName)
+                .addSharedElement(txtView, txtTransitionName)
                 .replace(R.id.contentFrameLay, starDetailFragment)
                 .commit()
     }

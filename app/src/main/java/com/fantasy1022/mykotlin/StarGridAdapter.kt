@@ -22,7 +22,7 @@ class StarGridAdapter(val context: Context, var starInfos: ArrayList<StarInfo>, 
 
 
     interface OnStarClickListener {
-        fun onClick(view: ImageView, position: Int)
+        fun onClick(view: View, position: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StarGridAdapter.ItemViewHolder {
@@ -33,13 +33,13 @@ class StarGridAdapter(val context: Context, var starInfos: ArrayList<StarInfo>, 
 
 
     override fun onBindViewHolder(holder: StarGridAdapter.ItemViewHolder, position: Int) {
-        Log.d(TAG, "holder.avatorImg:" + holder.avatorImg)
         Picasso.with(context).load(starInfos.get(position).avatorUrl).into(holder.avatorImg)
         holder.previousRankTxt.text = ("(" + starInfos.get(position).nowRanK + ")")
         holder.nameTxt.text = starInfos.get(position).chineaseName
-        holder.avatorImg.setOnClickListener { v -> onStarClickListener?.onClick(v as ImageView, position) } //onStarClickListener?.onClick(v, position)
+        holder.itemView.setOnClickListener { onStarClickListener?.onClick(it, position) } //onStarClickListener?.onClick(v, position)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             holder.avatorImg.transitionName = "trans_image" + position
+            holder.nameTxt.transitionName = "trans_txt" + position
         }
 
     }
